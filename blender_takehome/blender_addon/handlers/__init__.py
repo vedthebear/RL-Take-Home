@@ -13,14 +13,29 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from . import build, lifecycle, perceive
+from . import build, frame, lifecycle, light, perceive, place, surface
 
 Handler = Callable[[dict[str, Any]], dict[str, Any]]
 
 HANDLERS: dict[str, Handler] = {
-    "ping": lifecycle.ping,
-    "add_primitive": build.add_primitive,
+    # Perception
     "get_scene_summary": perceive.get_scene_summary,
     "get_object": perceive.get_object,
     "render_image": perceive.render_image,
+    # Build
+    "add_primitive": build.add_primitive,
+    "add_modifier": build.add_modifier,
+    # Place
+    "transform_object": place.transform_object,
+    "duplicate_object": place.duplicate_object,
+    "delete_object": place.delete_object,
+    # Surface
+    "set_material": surface.set_material,
+    # Light
+    "add_light": light.add_light,
+    # Frame
+    "add_camera": frame.add_camera,
+    # Lifecycle
+    "ping": lifecycle.ping,
+    "clear_scene": lifecycle.clear_scene,
 }

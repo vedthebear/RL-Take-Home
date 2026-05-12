@@ -15,7 +15,12 @@ from fastmcp import FastMCP
 
 from .client import BlenderClient
 from .tools import build as _tools_build
+from .tools import frame as _tools_frame
+from .tools import lifecycle as _tools_lifecycle
+from .tools import light as _tools_light
 from .tools import perceive as _tools_perceive
+from .tools import place as _tools_place
+from .tools import surface as _tools_surface
 
 mcp: FastMCP = FastMCP(
     name="blender-mcp",
@@ -53,8 +58,13 @@ def ping(message: str = "hello") -> dict[str, object]:
 
 
 # Register category-grouped tools.
-_tools_build.register(mcp, _client)
 _tools_perceive.register(mcp, _client)
+_tools_build.register(mcp, _client)
+_tools_place.register(mcp, _client)
+_tools_surface.register(mcp, _client)
+_tools_light.register(mcp, _client)
+_tools_frame.register(mcp, _client)
+_tools_lifecycle.register(mcp, _client)
 
 
 # ---------------------------------------------------------------------------
