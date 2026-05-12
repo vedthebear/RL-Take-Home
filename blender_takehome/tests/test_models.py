@@ -297,8 +297,14 @@ class TestAddLight:
 class TestRenderImage:
     def test_defaults(self) -> None:
         inp = m.RenderImageInput()
-        assert inp.engine == "BLENDER_EEVEE_NEXT"
+        assert inp.engine == "BLENDER_EEVEE"
         assert inp.resolution == (1280, 720)
+
+    def test_legacy_eevee_next_still_accepted(self) -> None:
+        # Older clients (Blender 4.2 era) may send the _NEXT suffix; the addon
+        # canonicalizes at the boundary so we still accept it on the wire.
+        inp = m.RenderImageInput(engine="BLENDER_EEVEE_NEXT")
+        assert inp.engine == "BLENDER_EEVEE_NEXT"
 
     def test_resolution_lower_bound(self) -> None:
         with pytest.raises(ValidationError, match=r"\[16, 8192\]"):

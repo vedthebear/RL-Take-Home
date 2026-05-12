@@ -32,6 +32,17 @@ _KNOWN_BLENDER_TYPES: set[str] = set(_BLENDER_TYPE_FROM_FILTER.values())
 INLINE_IMAGE_CAP_BYTES: int = 4 * 1024 * 1024
 
 
+def _resolve_eevee_engine() -> str:
+    """Return the EEVEE engine identifier for the running Blender version.
+
+    Blender 5.0 removed the legacy EEVEE engine and renamed
+    ``BLENDER_EEVEE_NEXT`` back to ``BLENDER_EEVEE``. Older 4.x revisions
+    have both engines and the "next" one carries the ``_NEXT`` suffix.
+    Always ask Blender which one to use rather than guessing.
+    """
+    return "BLENDER_EEVEE" if bpy.app.version[0] >= 5 else "BLENDER_EEVEE_NEXT"
+
+
 # ---------------------------------------------------------------------------
 # get_scene_summary
 # ---------------------------------------------------------------------------
@@ -216,10 +227,16 @@ def render_image(params: dict[str, Any]) -> dict[str, Any]:
             "before rendering",
         )
 
-    engine = params.get("engine", "BLENDER_EEVEE_NEXT")
-    if engine not in ("BLENDER_EEVEE_NEXT", "CYCLES"):
+    requested_engine = params.get("engine", "BLENDER_EEVEE")
+    # Accept either EEVEE alias from any-vintage caller, then translate to
+    # whatever the running Blender expects. CYCLES passes through unchanged.
+    if requested_engine in ("BLENDER_EEVEE", "BLENDER_EEVEE_NEXT"):
+        engine = _resolve_eevee_engine()
+    elif requested_engine == "CYCLES":
+        engine = "CYCLES"
+    else:
         return h.err(
-            "validation_error", f"unsupported render engine: {engine!r}"
+            "validation_error", f"unsupported render engine: {requested_engine!r}"
         )
     resolution = params.get("resolution", (1280, 720))
     samples = int(params.get("samples", 64))

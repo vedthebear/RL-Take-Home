@@ -277,7 +277,10 @@ GetObjectResult = Annotated[
 # 3. render_image
 # ---------------------------------------------------------------------------
 
-RenderEngine = Literal["BLENDER_EEVEE_NEXT", "CYCLES"]
+# Engine strings accepted on the wire. Blender 5.0 removed the legacy EEVEE
+# and renamed "BLENDER_EEVEE_NEXT" back to "BLENDER_EEVEE". The addon accepts
+# either form and canonicalizes to whatever the running Blender expects.
+RenderEngine = Literal["BLENDER_EEVEE", "BLENDER_EEVEE_NEXT", "CYCLES"]
 
 # Cap inline image payload at 4 MiB; larger renders still write to disk but
 # return only the filepath. Keeps Claude's context manageable.
@@ -294,7 +297,7 @@ class RenderImageInput(BaseModel):
         max_length=1024,
         description="Output path. If None, a temp file is used.",
     )
-    engine: RenderEngine = "BLENDER_EEVEE_NEXT"
+    engine: RenderEngine = "BLENDER_EEVEE"
     resolution: tuple[int, int] = (1280, 720)
     samples: int = Field(default=64, ge=1, le=4096)
     return_image: bool = True
