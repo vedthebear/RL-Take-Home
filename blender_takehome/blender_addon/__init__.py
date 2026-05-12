@@ -171,11 +171,16 @@ class BLENDERMCP_PT_panel(Panel):
         else:
             row.label(text="Stopped", icon="RADIOBUT_OFF")
 
+        # Enable/disable is set on the row, not on the operator — the value
+        # returned from row.operator() is an OperatorProperties for passing
+        # arguments, not the button widget itself.
         row = layout.row(align=True)
-        start = row.operator("blendermcp.start_server", icon="PLAY")
-        start.enabled = not running  # type: ignore[attr-defined]
-        stop = row.operator("blendermcp.stop_server", icon="PAUSE")
-        stop.enabled = running  # type: ignore[attr-defined]
+        start_row = row.row(align=True)
+        start_row.enabled = not running
+        start_row.operator("blendermcp.start_server", icon="PLAY")
+        stop_row = row.row(align=True)
+        stop_row.enabled = running
+        stop_row.operator("blendermcp.stop_server", icon="PAUSE")
 
 
 # ---------------------------------------------------------------------------
