@@ -1,4 +1,10 @@
-"""Material tool: ``set_material`` (create + assign Principled BSDF)."""
+"""Material tool: ``set_material`` (create + assign Principled BSDF).
+
+One tool covers the common case of "make this object look like X" — create or
+reuse a Principled BSDF, set its main knobs, assign it to a slot.
+
+Addon-side counterpart: ``blender_addon/handlers/surface.py``.
+"""
 
 from __future__ import annotations
 

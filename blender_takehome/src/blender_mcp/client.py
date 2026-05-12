@@ -1,13 +1,16 @@
-"""TCP client for the Blender addon.
+"""TCP client for the Blender addon — MCP-server half's only outbound socket.
 
 A single ``BlenderClient`` is shared by every tool function. It maintains one
 TCP connection to the addon and serializes calls behind a lock — FastMCP runs
 sync tools on a threadpool, so concurrent calls are possible.
 
-The client is the boundary where socket-level errors are mapped to structured
-``Failure`` payloads. Every method returns a JSON-ready dict, never raises
-across this boundary, so tool functions can return it (or re-parse with
-Pydantic) without further error plumbing.
+This file is the *boundary*: every socket error, timeout, malformed reply, or
+ID mismatch is caught here and translated into a structured ``Failure`` dict.
+Tool wrappers above this layer never see a raw exception.
+
+The receiving end of the connection is ``blender_addon/server.py``, which
+listens on ``localhost:9876`` by default. See ``blender_mcp/__init__.py`` for
+the system map.
 
 Per-tool timeout is passed in by the caller; render-class tools get a large
 budget, every other tool gets a short one.
@@ -133,7 +136,9 @@ class BlenderClient:
                     f"transport error during {command!r}: {exc}",
                 )
 
-        # Validate envelope shape and id correlation.
+        # Envelope validation happens outside the lock: the socket is already
+        # quiet by this point. The ID must match what we sent or we're reading
+        # someone else's reply — drop it as ``internal_error``.
         if not isinstance(response.get("id"), str) or response["id"] != cmd_id:
             return _err(
                 "internal_error",

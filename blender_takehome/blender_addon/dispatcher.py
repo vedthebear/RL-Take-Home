@@ -1,9 +1,18 @@
-"""Main-thread dispatcher.
+"""Main-thread dispatcher — the bridge between socket workers and bpy.
 
 bpy is not thread-safe. Socket worker threads cannot touch ``bpy.data`` or any
 operator. They submit commands here; a single persistent ``bpy.app.timers``
 callback drains the queue on the main thread, runs the handler, and signals
 completion via a ``concurrent.futures.Future``.
+
+The flow per command:
+
+    worker thread  ─submit(cmd)─▶  queue  ─tick()─▶  handler(params)  ─▶  result
+         ▲                                                                  │
+         └──────────────  future.set_result(result)  ────────────────────────┘
+
+If the handler raises, the ``finally`` block on ``_handle_one`` still resolves
+the future — the worker thread never hangs.
 
 Invariants:
 

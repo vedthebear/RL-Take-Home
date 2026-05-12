@@ -1,4 +1,11 @@
-"""Tools that move, duplicate, or delete existing objects."""
+"""Placement tools: ``transform_object``, ``duplicate_object``, ``delete_object``.
+
+These mutate existing objects by name. The agent always uses the name that
+came back from a previous create-style call (Blender may have renamed it on
+collision).
+
+Addon-side counterpart: ``blender_addon/handlers/place.py``.
+"""
 
 from __future__ import annotations
 

@@ -4,6 +4,7 @@ Mirrors ``blender_mcp.protocol`` but lives inside the addon so it stays
 self-contained when installed into Blender's addons directory (which doesn't
 have the MCP-server package on its sys.path).
 
+Both sides MUST agree byte-for-byte. If you change one, change the other.
 Keep this file in sync with ``src/blender_mcp/protocol.py``.
 """
 

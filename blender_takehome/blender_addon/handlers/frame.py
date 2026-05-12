@@ -1,4 +1,11 @@
-"""Camera handler: add a perspective camera, optionally aimed at a target."""
+"""Camera handler: add a perspective camera, optionally aimed at a target.
+
+The Track-To constraint is the simplest way to "point" a camera at an object
+without computing Euler angles by hand — the constraint solver does it for
+us, and the agent just names the target.
+
+MCP-side wrapper: ``src/blender_mcp/tools/frame.py``.
+"""
 
 from __future__ import annotations
 

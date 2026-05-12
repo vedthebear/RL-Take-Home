@@ -1,4 +1,11 @@
-"""Object placement handlers: transform, duplicate, delete."""
+"""Object placement handlers: transform, duplicate, delete.
+
+All three look up the target via ``bpy.data.objects.get(name)`` and bail with
+``object_not_found`` if missing. Mutations are direct property assignments
+(no operators), which keeps these handlers fast and side-effect-free.
+
+MCP-side wrapper: ``src/blender_mcp/tools/place.py``.
+"""
 
 from __future__ import annotations
 

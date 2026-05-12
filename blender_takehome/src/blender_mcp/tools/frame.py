@@ -1,4 +1,11 @@
-"""Camera tool: ``add_camera``."""
+"""Camera tool: ``add_camera``.
+
+Adds a perspective camera, optionally aimed at an existing object via a
+Track-To constraint (so the agent doesn't have to compute the rotation
+itself).
+
+Addon-side counterpart: ``blender_addon/handlers/frame.py``.
+"""
 
 from __future__ import annotations
 

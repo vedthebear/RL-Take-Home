@@ -1,4 +1,11 @@
-"""Tools that create or modify mesh geometry."""
+"""Build tools: ``add_primitive`` and ``add_modifier``.
+
+Both use a discriminated union on ``kind`` so the LLM gets a clean ``oneOf``
+JSON Schema (one variant per primitive / modifier type) instead of a fat
+schema with many optional fields.
+
+Addon-side counterpart: ``blender_addon/handlers/build.py``.
+"""
 
 from __future__ import annotations
 

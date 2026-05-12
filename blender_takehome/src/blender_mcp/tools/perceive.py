@@ -1,4 +1,11 @@
-"""Inspection tools: ``get_scene_summary``, ``get_object``, ``render_image``."""
+"""Inspection tools: ``get_scene_summary``, ``get_object``, ``render_image``.
+
+These are the agent's *eyes* — read-only on the scene side. ``render_image``
+also unwraps a successful inline PNG into an MCP ``Image`` so the LLM gets a
+real image content block instead of a base64 string.
+
+Addon-side counterpart: ``blender_addon/handlers/perceive.py``.
+"""
 
 from __future__ import annotations
 

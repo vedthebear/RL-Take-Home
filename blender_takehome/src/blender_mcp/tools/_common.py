@@ -1,4 +1,11 @@
-"""Shared utilities for the MCP-side tool wrappers."""
+"""Shared utilities for the MCP-side tool wrappers.
+
+The one job here is ``parse_response``: take whatever the addon returned (an
+already-validated success dict, a structured ``Failure`` dict, or — in the
+worst case — something malformed) and produce a single discriminated-union
+instance the tool can return. This is the seam where addon-side bugs become
+visible to the agent as ``internal_error`` rather than crashing the server.
+"""
 
 from __future__ import annotations
 

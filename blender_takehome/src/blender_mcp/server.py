@@ -1,9 +1,13 @@
-"""FastMCP entry point.
+"""FastMCP entry point — the LLM-facing surface of the MCP-server half.
 
-This module exposes the MCP server that AI agents connect to. It maintains a
-single ``BlenderClient`` and registers one ``@mcp.tool`` per Blender operation.
+This module is just wiring:
 
-The tools live in ``blender_mcp.tools.*`` — this module is just the wiring.
+1. Construct a single shared ``BlenderClient`` (one TCP connection, reused).
+2. Walk every ``tools/<category>.py`` module and let it ``register(mcp, client)``
+   its ``@mcp.tool``-decorated functions.
+3. Publish a strategy prompt and run the FastMCP loop.
+
+For the project-level system map, see ``blender_mcp/__init__.py``.
 """
 
 from __future__ import annotations
@@ -22,6 +26,8 @@ from .tools import perceive as _tools_perceive
 from .tools import place as _tools_place
 from .tools import surface as _tools_surface
 
+# The FastMCP instance: tools register against this; the host process talks to
+# it over the chosen transport (stdio by default).
 mcp: FastMCP = FastMCP(
     name="blender-mcp",
     instructions=(
@@ -57,7 +63,9 @@ def ping(message: str = "hello") -> dict[str, object]:
     return _client.call("ping", {"message": message})
 
 
-# Register category-grouped tools.
+# Register category-grouped tools. Each module decorates its own functions
+# with ``@mcp.tool()`` against the shared FastMCP + client. Keeping one
+# category per file keeps the surface easy to navigate.
 _tools_perceive.register(mcp, _client)
 _tools_build.register(mcp, _client)
 _tools_place.register(mcp, _client)

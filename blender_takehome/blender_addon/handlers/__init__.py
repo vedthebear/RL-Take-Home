@@ -1,4 +1,4 @@
-"""Handler dispatch table.
+"""Handler dispatch table — the only place a command name resolves to bpy code.
 
 Each command name maps to a handler function ``(params: dict) -> dict``. The
 returned dict is the JSON-serializable payload sent back to the MCP server;
@@ -6,7 +6,9 @@ its ``status`` field is ``"ok"`` for success or ``"error"`` for a structured
 failure.
 
 Handlers are registered here so the addon has a single source of truth for
-which commands it supports.
+which commands it supports. Adding a tool means: (1) add a handler in the
+matching ``handlers/<category>.py``, (2) register it here, (3) add the
+MCP-side wrapper in ``src/blender_mcp/tools/<category>.py``.
 """
 
 from __future__ import annotations

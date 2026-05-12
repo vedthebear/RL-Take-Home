@@ -1,4 +1,10 @@
-"""Scene-lifecycle tool: ``clear_scene``."""
+"""Scene-lifecycle tool: ``clear_scene``.
+
+The other lifecycle command, ``ping``, lives directly in ``server.py`` because
+it doesn't need a Pydantic-modeled input/output — it's just a health check.
+
+Addon-side counterpart: ``blender_addon/handlers/lifecycle.py``.
+"""
 
 from __future__ import annotations
 

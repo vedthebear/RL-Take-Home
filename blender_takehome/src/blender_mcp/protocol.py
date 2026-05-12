@@ -10,6 +10,10 @@ the two endpoints agree on. The MCP server sends `Command` envelopes (see
 
 Length prefixing avoids the embedded-newline issues of newline-delimited JSON
 and makes partial reads deterministic to handle.
+
+A byte-identical mirror lives in ``blender_addon/_protocol.py`` so the addon
+zip is self-contained when installed inside Blender (which doesn't have this
+package on its sys.path). Keep the two files in sync.
 """
 
 from __future__ import annotations

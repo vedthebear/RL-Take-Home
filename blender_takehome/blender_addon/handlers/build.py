@@ -1,4 +1,13 @@
-"""Build-category handlers: primitives and modifiers."""
+"""Build-category handlers: primitives and modifiers.
+
+Two top-level handlers (``add_primitive``, ``add_modifier``) each branch on
+the ``kind`` discriminator coming from the Pydantic schema on the MCP side.
+The branches are kept verbose-but-flat (one ``if`` arm per kind) because
+modifier and primitive APIs in bpy vary enough that a fancy abstraction
+would hide more than it saved.
+
+MCP-side wrapper: ``src/blender_mcp/tools/build.py``.
+"""
 
 from __future__ import annotations
 

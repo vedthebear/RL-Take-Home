@@ -1,5 +1,13 @@
 """Shared helpers for addon-side handlers.
 
+Two jobs:
+
+1. Build the success / failure response dicts (``ok`` / ``err``) that match
+   ``src/blender_mcp/models.py``'s ``status`` discriminator.
+2. Smooth out small bpy ergonomics: unit conversions (deg ↔ rad), the
+   "select_only" invariant that operators require, and ``Vector`` ↔ tuple
+   coercion for JSON.
+
 bpy is imported lazily so this module loads cleanly in environments without
 Blender (useful for static analysis and isolated tests). Every helper that
 actually touches bpy will fail loudly if it isn't installed.

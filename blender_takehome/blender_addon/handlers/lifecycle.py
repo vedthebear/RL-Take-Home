@@ -1,4 +1,12 @@
-"""Lifecycle-related handlers (ping, clear_scene)."""
+"""Lifecycle-related handlers (ping, clear_scene).
+
+``ping`` is the round-trip used by the MCP-side ``ping`` tool to verify both
+the socket and the main-thread timer are alive — it's the cheapest possible
+proof the bridge is wired up correctly.
+
+MCP-side wrapper: ``src/blender_mcp/tools/lifecycle.py`` (for ``clear_scene``)
+and ``src/blender_mcp/server.py`` (for ``ping``).
+"""
 
 from __future__ import annotations
 

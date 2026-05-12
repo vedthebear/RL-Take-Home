@@ -1,8 +1,38 @@
-"""Blender MCP Server — addon entry point.
+"""Blender MCP Server — addon entry point (runs *inside* Blender).
 
-Provides a 3D Viewport N-panel ("MCP" tab) with Start / Stop buttons. Starting
-the server binds a TCP socket on ``localhost:<port>`` and registers a
-main-thread timer to drain incoming commands. Stopping releases both.
+System map (Blender-side)
+=========================
+
+This is the receiving half of the bridge. The other half (FastMCP server) is
+in ``src/blender_mcp/``; the two halves talk over a TCP socket on
+``localhost:9876``.
+
+    TCP :9876
+       │
+       ▼
+    ┌──────────────────────────┐
+    │  AddonServer             │  blender_addon/server.py
+    │  ─ listener thread       │   accepts connections
+    │  ─ N worker threads      │   one per active client conn
+    └────────────┬─────────────┘
+                 │  queue.put((cmd, future))     ← worker threads (not main)
+                 ▼
+    ┌──────────────────────────┐
+    │  Dispatcher              │  blender_addon/dispatcher.py
+    │  ─ bpy.app.timers tick   │   runs on the main thread
+    │  ─ drains queue          │
+    └────────────┬─────────────┘
+                 │  HANDLERS[name](params)       ← main thread only
+                 ▼
+    ┌──────────────────────────┐
+    │  handlers/*.py           │  blender_addon/handlers/
+    │  ─ get_scene_summary     │   the only files that touch bpy
+    │  ─ add_primitive ...     │
+    └──────────────────────────┘
+
+The split exists because bpy is **main-thread-only**. Socket workers can't
+call bpy directly without crashing Blender, so they hand work to the
+dispatcher and wait on a ``concurrent.futures.Future``.
 
 Installation:
 1. Zip the ``blender_addon`` directory.
@@ -35,6 +65,8 @@ bl_info = {
 DEFAULT_PORT: int = 9876
 
 # Module-level singletons. The addon lifecycle (register/unregister) owns these.
+# They survive between Start/Stop clicks so the dispatcher's handler table
+# isn't rebuilt every time the user toggles the listener.
 _dispatcher_instance: _dispatcher.Dispatcher | None = None
 _server_instance: _server.AddonServer | None = None
 

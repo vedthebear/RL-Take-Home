@@ -1,4 +1,12 @@
-"""Lighting handler: create a typed light at a transform."""
+"""Lighting handler: create a typed light at a transform.
+
+``add_light`` runs ``bpy.ops.object.light_add`` to create the light object
+and then configures the light's data block via ``_configure_light`` (which
+branches on ``kind``). Unit conversion: ``angle_deg``, ``spot_size_deg`` are
+converted to radians here because bpy's light data stores those in radians.
+
+MCP-side wrapper: ``src/blender_mcp/tools/light.py``.
+"""
 
 from __future__ import annotations
 

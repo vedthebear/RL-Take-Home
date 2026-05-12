@@ -1,6 +1,10 @@
 """Read-only handlers: scene summary, object detail, rendering.
 
 These never mutate state — they're the "perception" side of the agent loop.
+``render_image`` does write a PNG to disk (the renderer's only sane output
+path), but it leaves the scene graph untouched.
+
+MCP-side wrapper: ``src/blender_mcp/tools/perceive.py``.
 """
 
 from __future__ import annotations

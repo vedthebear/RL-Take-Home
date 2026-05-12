@@ -1,4 +1,16 @@
-"""Material handler: create-or-reuse a Principled BSDF and assign it."""
+"""Material handler: create-or-reuse a Principled BSDF and assign it.
+
+Two helpers carry most of the weight:
+
+- ``_get_or_make_principled``: ensures the material has both a Principled BSDF
+  node and a Material Output node, and wires them — so a custom material that
+  was hand-built without the default graph still renders.
+- ``_set_input``: tolerant socket write. Blender 4.x renamed several Principled
+  sockets between point releases; missing-socket writes are silently dropped
+  rather than raising.
+
+MCP-side wrapper: ``src/blender_mcp/tools/surface.py``.
+"""
 
 from __future__ import annotations
 

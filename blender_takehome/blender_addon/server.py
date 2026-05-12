@@ -4,6 +4,20 @@ A single-threaded listener accepts connections on ``localhost:<port>`` and
 spawns a per-connection worker thread that reads commands, hands them to the
 ``Dispatcher`` (which marshals to the main thread), and writes responses back.
 
+Threading layout
+----------------
+
+    listener thread ──accept()──▶ client thread ──recv──▶ dispatcher.submit()
+                                       │                         │
+                                       │                   blocks on Future
+                                       │                         │
+                                       ◀───── reply payload ─────┘
+                                       │
+                                     send()
+
+The client thread *never* touches bpy. All bpy work happens on the main
+thread inside the dispatcher's ``bpy.app.timers`` callback.
+
 Design notes:
 
 - The listener uses ``settimeout(1.0)`` so it can poll the shutdown event in

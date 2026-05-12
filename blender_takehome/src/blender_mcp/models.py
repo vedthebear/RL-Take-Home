@@ -1,4 +1,13 @@
-"""Pydantic models for tool inputs, outputs, and wire envelopes.
+"""Pydantic models — the wire schema both halves of the bridge agree on.
+
+This file is the *contract* between the MCP-server side (which validates with
+these classes) and the Blender-addon side (which emits matching plain dicts).
+Editing a field here without mirroring the change in
+``blender_addon/handlers/*.py`` will produce ``internal_error`` responses for
+that tool.
+
+Layout: shared validators and aliases first, then ``Failure`` and the wire
+envelopes, then one section per tool ordered to match the 12-tool surface.
 
 Design contract:
 

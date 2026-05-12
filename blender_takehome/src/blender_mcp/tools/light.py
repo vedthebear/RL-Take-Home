@@ -1,4 +1,10 @@
-"""Lighting tool: ``add_light``."""
+"""Lighting tool: ``add_light``.
+
+Discriminated union on ``kind``: ``point``, ``sun``, ``spot``, ``area``. Each
+variant carries only the knobs that apply to its light type.
+
+Addon-side counterpart: ``blender_addon/handlers/light.py``.
+"""
 
 from __future__ import annotations
 
