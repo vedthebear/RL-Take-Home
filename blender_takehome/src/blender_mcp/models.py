@@ -282,9 +282,11 @@ GetObjectResult = Annotated[
 # either form and canonicalizes to whatever the running Blender expects.
 RenderEngine = Literal["BLENDER_EEVEE", "BLENDER_EEVEE_NEXT", "CYCLES"]
 
-# Cap inline image payload at 4 MiB; larger renders still write to disk but
-# return only the filepath. Keeps Claude's context manageable.
-INLINE_IMAGE_MAX_BYTES: Final[int] = 4 * 1024 * 1024
+# Cap inline image payload at ~700 KB. MCP transports (notably Claude
+# Desktop) enforce a ~1 MB response limit; base64 of the PNG inflates ~1.33x
+# so 700 KB PNG -> ~935 KB on the wire, leaving envelope headroom. Larger
+# renders still write to disk but return only the filepath.
+INLINE_IMAGE_MAX_BYTES: Final[int] = 700 * 1024
 
 
 class RenderImageInput(BaseModel):

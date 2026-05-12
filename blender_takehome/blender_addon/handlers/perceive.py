@@ -29,7 +29,11 @@ _BLENDER_TYPE_FROM_FILTER: dict[str, str] = {
 }
 _KNOWN_BLENDER_TYPES: set[str] = set(_BLENDER_TYPE_FROM_FILTER.values())
 
-INLINE_IMAGE_CAP_BYTES: int = 4 * 1024 * 1024
+# Cap the inline PNG at ~700 KB. Base64 encoding inflates ~1.33x, so a
+# 700 KB PNG becomes ~935 KB on the wire — safely under Claude's 1 MB MCP
+# response limit with room for the envelope. Larger renders are still written
+# to disk and the filepath comes back instead.
+INLINE_IMAGE_CAP_BYTES: int = 700 * 1024
 
 
 def _resolve_eevee_engine() -> str:
