@@ -13,10 +13,11 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from . import lifecycle
+from . import build, lifecycle
 
 Handler = Callable[[dict[str, Any]], dict[str, Any]]
 
 HANDLERS: dict[str, Handler] = {
     "ping": lifecycle.ping,
+    "add_primitive": build.add_primitive,
 }

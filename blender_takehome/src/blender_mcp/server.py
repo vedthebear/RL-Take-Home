@@ -14,6 +14,7 @@ import sys
 from fastmcp import FastMCP
 
 from .client import BlenderClient
+from .tools import build as _tools_build
 
 mcp: FastMCP = FastMCP(
     name="blender-mcp",
@@ -48,6 +49,10 @@ def ping(message: str = "hello") -> dict[str, object]:
     before issuing structured commands.
     """
     return _client.call("ping", {"message": message})
+
+
+# Register category-grouped tools.
+_tools_build.register(mcp, _client)
 
 
 # ---------------------------------------------------------------------------
