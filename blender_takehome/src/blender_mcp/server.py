@@ -15,6 +15,7 @@ from fastmcp import FastMCP
 
 from .client import BlenderClient
 from .tools import build as _tools_build
+from .tools import perceive as _tools_perceive
 
 mcp: FastMCP = FastMCP(
     name="blender-mcp",
@@ -53,6 +54,7 @@ def ping(message: str = "hello") -> dict[str, object]:
 
 # Register category-grouped tools.
 _tools_build.register(mcp, _client)
+_tools_perceive.register(mcp, _client)
 
 
 # ---------------------------------------------------------------------------
