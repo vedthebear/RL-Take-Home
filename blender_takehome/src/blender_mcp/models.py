@@ -30,7 +30,7 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Final, Literal, Union
 
-from pydantic import (
+from pydantic import (  # pyright: ignore[reportMissingImports]
     AfterValidator,
     BaseModel,
     ConfigDict,
