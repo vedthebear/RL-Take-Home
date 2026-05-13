@@ -1,9 +1,1 @@
-https://TODO-RECORD-AND-PASTE-LINK-HERE.example.com
-
-(Placeholder — record the demo and replace this line with the public link.
-The demo should show: Blender viewport + Claude chat side-by-side, the
-agent calling `clear_scene` → `add_primitive` × N → `set_material` × N →
-`add_light` → `add_camera` → `render_image`, with the viewport updating
-live. Follow with a 1–2 min walkthrough of the discriminated-union
-schemas in `src/blender_mcp/models.py` and the addon's main-thread
-dispatcher pattern in `blender_addon/dispatcher.py`.)
+https://screen.studio/share/CamDaHDp
